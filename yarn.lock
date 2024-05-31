@@ -3278,6 +3278,11 @@ coa@^2.0.2:
     chalk "^2.4.1"
     q "^1.1.2"
 
+codemirror@5:
+  version "5.65.16"
+  resolved "https://registry.yarnpkg.com/codemirror/-/codemirror-5.65.16.tgz#efc0661be6bf4988a6a1c2fe6893294638cdb334"
+  integrity sha512-br21LjYmSlVL0vFCPWPfhzUCT34FM/pAdK7rRIZwa0rrtrIdotvP4Oh4GUHsu2E3IrQMCfRkL/fN3ytMNxVQvg==
+
 collect-v8-coverage@^1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/collect-v8-coverage/-/collect-v8-coverage-1.0.2.tgz#c0b29bcd33bcd0779a1344c2136051e6afd3d9e9"
