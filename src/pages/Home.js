@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState } from "react";
 import { v4 as uuidV4 } from "uuid";
 import toast from "react-hot-toast";
