@@ -13,6 +13,7 @@ import {
 
 const EditorPage = () => {
   const socketRef = useRef(null);
+  const codeRef = useRef(null);
   const location = useLocation();
   const { roomId } = useParams();
   const reactNavigator = useNavigate();
@@ -33,13 +34,19 @@ const EditorPage = () => {
         roomId,
         username: location.state?.username,
       });
-      socketRef.current.on(ACTIONS.JOINED, ({ clients, username }) => {
+
+      socketRef.current.on(ACTIONS.JOINED, ({ clients, username, socketId }) => {
         if (username !== location.state?.username) {
           toast.success(`${username} joined the room.`);
           console.log(`${username} joined`);
         }
         setClients(clients);
+        socketRef.current.emit(ACTIONS.SYNC_CODE, {
+          code: codeRef.current,
+          socketId
+        });
       });
+
       socketRef.current.on(ACTIONS.DISCONNECTED, ({ socketId, username }) => {
         toast.success(`${username} left the room.`);
         setClients((prev) => {
@@ -66,7 +73,7 @@ const EditorPage = () => {
   }
 
   function leaveRoom() {
-    reactNavigator('/');
+    reactNavigator("/");
   }
 
   if (!location.state) {
@@ -95,7 +102,13 @@ const EditorPage = () => {
         </button>
       </div>
       <div className="editorWrap">
-        <Editor socketRef={socketRef} roomId={roomId} />
+        <Editor
+          socketRef={socketRef}
+          roomId={roomId}
+          onCodeChange={(code) => {
+            codeRef.current = code;
+          }}
+        />
       </div>
     </div>
   );
