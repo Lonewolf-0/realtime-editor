@@ -34,14 +34,13 @@ const EditorPage = () => {
         username: location.state?.username,
       });
       socketRef.current.on(ACTIONS.JOINED, ({ clients, username }) => {
-        if (username != location.state?.username) {
+        if (username !== location.state?.username) {
           toast.success(`${username} joined the room.`);
           console.log(`${username} joined`);
         }
         setClients(clients);
       });
       socketRef.current.on(ACTIONS.DISCONNECTED, ({ socketId, username }) => {
-        
         toast.success(`${username} left the room.`);
         setClients((prev) => {
           return prev.filter((client) => client.socketId !== socketId);
@@ -52,9 +51,23 @@ const EditorPage = () => {
     return () => {
       socketRef.current.disconnect();
       socketRef.current.off(ACTIONS.JOINED);
-      socketRef.current.off(ACTIONS.DISCONNECTED );
-    }
+      socketRef.current.off(ACTIONS.DISCONNECTED);
+    };
   }, []);
+
+  async function copyRoomId() {
+    try {
+      await navigator.clipboard.writeText(roomId);
+      toast.success("Room ID copied");
+    } catch (err) {
+      toast.error("Could not copy the Room ID");
+      console.log(err);
+    }
+  }
+
+  function leaveRoom() {
+    reactNavigator('/');
+  }
 
   if (!location.state) {
     return <Navigate to="/" />;
@@ -74,11 +87,15 @@ const EditorPage = () => {
             ))}
           </div>
         </div>
-        <button className="btn copyBtn">Copy ROOM ID</button>
-        <button className="btn leaveBtn">Leave</button>
+        <button className="btn copyBtn" onClick={copyRoomId}>
+          Copy ROOM ID
+        </button>
+        <button className="btn leaveBtn" onClick={leaveRoom}>
+          Leave
+        </button>
       </div>
       <div className="editorWrap">
-        <Editor />
+        <Editor socketRef={socketRef} roomId={roomId} />
       </div>
     </div>
   );
